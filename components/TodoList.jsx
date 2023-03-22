@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useRef } from "react";
 import ListMinus from "../public/icons/list-minus.svg";
 import Edit from "../public/icons/edit-3.svg";
+import Save from "../public/icons/save.svg";
 
 const TodoList = ({
   id,
@@ -10,6 +11,7 @@ const TodoList = ({
   deleteTodoList,
   editTodoList,
 }) => {
+  const inputRef = useRef(null);
   const [isEditing, setIsEditing] = React.useState(false);
 
   const addTodo = (todoListId) => {
@@ -88,18 +90,65 @@ const TodoList = ({
     });
   };
 
+  const onSubmitNewName = (e) => {
+    e.preventDefault();
+    setIsEditing(false);
+    const newName = e.target[0].value;
+
+    if (newName === "") { return; }
+
+    editTodoList(id, newName);
+  }
+
   return (
     <div className="flex w-1/2 flex-col gap-1">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg">{name}</h2>
+      <div className="flex items-center justify-between gap-2">
+        {isEditing ? (
+          <form onSubmit={onSubmitNewName}>
+            <input
+              className="w-full rounded-md bg-transparent p-0.5 text-lg ring-2 ring-slate-300"
+              type="text"
+              value={name}
+              onChange={(e) => editTodoList(id, e.target.value)}
+              ref={inputRef}
+            />
+          </form>
+        ) : (
+          <h2 className="p-0.5 text-lg">{name}</h2>
+        )}
         <div className="flex flex-row gap-1">
-          <button
-            className="group rounded-md bg-slate-600 p-1"
-            onClick={() => setIsEditing(!isEditing)}
-          >
-            <Edit className="h-5 w-5 stroke-green-300 stroke-2 transition-colors group-hover:stroke-green-500" />
-            <span className="sr-only">delete</span>
-          </button>
+          {isEditing ? (
+            <button
+              className="group rounded-md bg-slate-600 p-1"
+              onClick={() => {
+                setIsEditing(false);
+              }}
+            >
+              <Save className="h-5 w-5 stroke-green-300 stroke-2 transition-colors group-hover:stroke-green-500" />
+              <span className="sr-only">save</span>
+            </button>
+          ) : (
+            <button
+              className="group rounded-md bg-slate-600 p-1"
+              onClick={() => {
+                setIsEditing(true);
+                setTimeout(() => {
+                  inputRef.current.focus();
+
+                  if (name === "New Todo List") {
+                    inputRef.current.setSelectionRange(
+                      0,
+                      inputRef.current.value.length
+                    );
+                  }
+                }, 1);
+              }}
+            >
+              <Edit className="h-5 w-5 stroke-green-300 stroke-2 transition-colors group-hover:stroke-green-500" />
+              <span className="sr-only">delete</span>
+            </button>
+          )}
+
           <button
             className="group rounded-md bg-slate-600 p-1"
             onClick={() => deleteTodoList(id)}
