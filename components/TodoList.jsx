@@ -1,6 +1,16 @@
 import React from "react";
+import ListMinus from "../public/icons/list-minus.svg";
+import Edit from "../public/icons/edit-3.svg";
 
-const TodoList = ({ id, name, todos, setTodoList }) => {
+const TodoList = ({
+  id,
+  name,
+  todos,
+  setTodoList,
+  deleteTodoList,
+  editTodoList,
+}) => {
+  const [isEditing, setIsEditing] = React.useState(false);
 
   const addTodo = (todoListId) => {
     setTodoList((prev) => {
@@ -78,15 +88,34 @@ const TodoList = ({ id, name, todos, setTodoList }) => {
     });
   };
 
-
   return (
-    <div>
-      <h2>{name}</h2>
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>{todo.name}</li>
-        ))}
-      </ul>
+    <div className="flex w-1/2 flex-col gap-1">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg">{name}</h2>
+        <div className="flex flex-row gap-1">
+          <button
+            className="group rounded-md bg-slate-600 p-1"
+            onClick={() => setIsEditing(!isEditing)}
+          >
+            <Edit className="h-5 w-5 stroke-green-300 stroke-2 transition-colors group-hover:stroke-green-500" />
+            <span className="sr-only">delete</span>
+          </button>
+          <button
+            className="group rounded-md bg-slate-600 p-1"
+            onClick={() => deleteTodoList(id)}
+          >
+            <ListMinus className="h-5 w-5 stroke-red-300 stroke-2 transition-colors group-hover:stroke-red-500" />
+            <span className="sr-only">delete</span>
+          </button>
+        </div>
+      </div>
+      <div className="post-it min-h-[150px] w-full">
+        <ul className="overflow-hidden text-slate-800">
+          {todos.map((todo) => (
+            <li key={todo.id}>{todo.name}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

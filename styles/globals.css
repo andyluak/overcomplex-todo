@@ -8,6 +8,26 @@
   --background-end-rgb: 255, 255, 255;
 }
 
+@layer base {
+  .post-it {
+    background-image: linear-gradient(
+      to top,
+      black 1%,
+      #fef08d 1% 20%,
+      black 20% 21%,
+      #fef08d 21% 40%,
+      black 40% 41%,
+      #fef08d 41% 60%,
+      black 60% 61%,
+      #fef08d 61% 80%,
+      black 80% 81%,
+      #fef08d 81% 100%
+    );
+
+    background-size: 150px 150px;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
