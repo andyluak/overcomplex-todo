@@ -1,0 +1,47 @@
+<style>
+  .squiggle {
+    animation: draw 1s ease-in-out forwards;
+  }
+  @keyframes draw {
+    from {
+      stroke-dashoffset: 444;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .squiggle.reverse {
+    animation: erase 1s ease-in-out forwards;
+  }
+
+  @keyframes erase {
+    from {
+      stroke-dashoffset: 0;
+    }
+    to {
+      stroke-dashoffset: 444;
+    }
+  }
+</style>
+
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <path
+    class="squiggle"
+    d="M 50 200 Q 100 100 150 200 T 250 200 Q 300 100 350 200"
+    stroke="#000"
+    stroke-width="5"
+    fill="none"
+    stroke-dasharray="444"
+    stroke-dashoffset="444"
+  />
+</svg>
+
+<script>
+  const squiggle = document.querySelector('.squiggle');
+  const length = squiggle.getTotalLength();
+  console.log(length);
+  squiggle.addEventListener('click', () => {
+    squiggle.classList.toggle('reverse');
+  });
+</script>

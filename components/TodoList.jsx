@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Kalam } from "next/font/google";
 
 import ListMinus from "../public/icons/list-minus.svg";
@@ -194,11 +194,16 @@ const TodoList = ({
                 id={todo.id}
                 deleteTodo={deleteTodo}
                 editTodo={editTodo}
+                toggleDoneTodo={toggleDoneTodo}
+                isDone={todo.isDone}
               />
             );
           })}
           <form onSubmit={onSubmitNewTodo}>
-            <input type="text" className="min-h-[28px] w-full pl-2 bg-yellow-300 focus:ring-2 ring-red-900 outline-none" />
+            <input
+              type="text"
+              className="min-h-[28px] w-full bg-yellow-300 pl-2 outline-none ring-red-900 focus:ring-2"
+            />
           </form>
         </ul>
       </div>
