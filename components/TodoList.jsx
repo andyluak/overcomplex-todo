@@ -1,7 +1,16 @@
 import React, { useRef } from "react";
+import { Kalam } from "next/font/google";
+
 import ListMinus from "../public/icons/list-minus.svg";
 import Edit from "../public/icons/edit-3.svg";
 import Save from "../public/icons/save.svg";
+import TodoItem from "./TodoItem";
+import cx from "clsx";
+
+const kalam = Kalam({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+});
 
 const TodoList = ({
   id,
@@ -14,7 +23,7 @@ const TodoList = ({
   const inputRef = useRef(null);
   const [isEditing, setIsEditing] = React.useState(false);
 
-  const addTodo = (todoListId) => {
+  const addTodo = (todoListId, newTodo) => {
     setTodoList((prev) => {
       return prev.map((todoList) => {
         if (todoList.id === todoListId) {
@@ -24,7 +33,7 @@ const TodoList = ({
               ...todoList.todos,
               {
                 id: todoList.todos.length + 1 + Math.random(),
-                todo,
+                todo: newTodo,
                 isDone: false,
               },
             ],
@@ -81,6 +90,7 @@ const TodoList = ({
               if (todo.id === todoId) {
                 return {
                   ...todo,
+                  todo: newTodo,
                 };
               }
             }),
@@ -95,10 +105,25 @@ const TodoList = ({
     setIsEditing(false);
     const newName = e.target[0].value;
 
-    if (newName === "") { return; }
+    if (newName === "") {
+      return;
+    }
 
     editTodoList(id, newName);
-  }
+  };
+
+  const onSubmitNewTodo = (e) => {
+    e.preventDefault();
+    const newTodo = e.target[0].value;
+
+    if (newTodo === "") {
+      return;
+    }
+
+    addTodo(id, newTodo);
+
+    e.target[0].value = "";
+  };
 
   return (
     <div className="flex w-1/2 flex-col gap-1">
@@ -159,10 +184,22 @@ const TodoList = ({
         </div>
       </div>
       <div className="post-it min-h-[150px] w-full">
-        <ul className="overflow-hidden text-slate-800">
-          {todos.map((todo) => (
-            <li key={todo.id}>{todo.name}</li>
-          ))}
+        <ul className={cx(" text-slate-800", kalam.className)}>
+          {todos.map((todo) => {
+            return (
+              <TodoItem
+                key={todo.id}
+                todoListId={id}
+                name={todo.todo}
+                id={todo.id}
+                deleteTodo={deleteTodo}
+                editTodo={editTodo}
+              />
+            );
+          })}
+          <form onSubmit={onSubmitNewTodo}>
+            <input type="text" className="min-h-[28px] w-full pl-2 bg-yellow-300 focus:ring-2 ring-red-900 outline-none" />
+          </form>
         </ul>
       </div>
     </div>
